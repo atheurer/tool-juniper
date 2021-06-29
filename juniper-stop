@@ -1,0 +1,28 @@
+#!/bin/bash
+exec >juniper-stop-stderrout.txt
+exec 2>&1
+
+echo "args: $@"
+echo
+echo "hostname: `hostname`"
+echo
+pidfile="juniper-expect-pid.txt"
+
+if [ -e $pidfile ]; then
+    pid=`cat $pidfile`
+    if [ -z "$pid" ]; then
+        echo "PID for juniper.exp ($pidfile) not found"
+        exit 1
+    fi
+    if [ -e /proc/$pid ]; then
+        kill -s SIGTERM $pid
+    else
+        echo "ERROR: process ID $pid was not found, so juniper.exp may have terminated abnormally"
+    fi
+else
+    echo "$pidfile not found"
+    echo "PWD: `/bin/pwd`"
+    echo "LS:"
+    /bin/ls -l
+    exit 1
+fi

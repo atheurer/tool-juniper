@@ -1,0 +1,31 @@
+#!/bin/bash
+exec >juniper-start-stderrout.txt
+exec 2>&1
+
+echo "args: $@"
+echo
+echo "pwd: `/bin/pwd`"
+echo
+echo "hostname: `hostname`"
+echo
+# defaults
+interval=3
+
+/bin/rm -f juniper-expect-pid.txt
+if [ -e /usr/bin/juniper.exp ]; then
+    mknod /dev/ptmx c 5 2
+    chmod 666 /dev/ptmx
+    mkdir /dev/pts
+    chmod 755 /dev/pts
+    mount -t devpts -o gid=5,mode=620 none /dev/pts
+    /usr/bin/juniper.exp >juniper-output.txt 2>&1 &
+    juniper_expect_pid=$!
+    if [ -z "$juniper_expect_pid" ]; then
+        echo "Could not get juniper-expect PID, exiting"
+        exit 1
+    fi
+    echo "juniper-expect pid is $juniper_expect_pid"
+else
+    echo "juniper.exp not found, exiting"
+    exit 1
+fi

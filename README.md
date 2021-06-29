@@ -1,2 +1,2 @@
-# tool-juniper
-Scripts to collect switch stats from Juniper products
+# juniper
+Scripts to help collect and post-process openvswitch and OVN

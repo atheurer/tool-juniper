@@ -1,0 +1,41 @@
+{
+    "rickshaw-tool": {
+        "schema": {
+            "version": "2020.03.18"
+        }
+    },
+    "tool": "juniper",
+    "controller": {
+        "post-script": "%tool-dir%juniper-post-process"
+    },
+    "collector": {
+        "files-from-controller": [
+            {
+                "src": "%tool-dir%/juniper-start",
+                "dest": "/usr/bin/"
+            },
+            {
+                "src": "%tool-dir%/juniper.exp",
+                "dest": "/usr/bin/"
+            },
+            {
+                "src": "%tool-dir%/juniper-stop",
+                "dest": "/usr/bin/"
+            }
+        ],
+        "blacklist": [
+            {
+                "endpoint": "k8s",
+                "collector-types": [ "client", "server" ]
+            }
+        ],
+        "whitelist": [
+            {
+                "endpoint": "k8s",
+                "collector-types": [ "master", "worker" ]
+            }
+        ],
+        "start": "juniper-start",
+        "stop": "juniper-stop"
+      }
+}
